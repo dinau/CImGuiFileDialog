@@ -17,9 +17,9 @@ ImGuiFileDialog example program with **C language**.
 
 ---
 
-[glfw_opengl3_fileopendialog source](examples/glfw_opengl3_fileopendialog/main.c)
+[glfw_opengl3_filedialog source](examples/glfw_opengl3_filedialog/main.c)
 
-![alt](img/glfw_opengl3_fileopendialog.png)
+![alt](img/glfw_opengl3_filedialog.png)
 
 ### Versions
 
@@ -43,11 +43,11 @@ git hash: c66089f509bbfbc0d8852d54106b1af88a104822
 ---
 
 ```sh
-git clone --recurse-submodules https://github.com/dinau/CImGuiFileOpenDialog
+git clone --recurse-submodules https://github.com/dinau/CImGuiFileDialog
 ```
 
 ```sh
-cd CImGuiFileOpenDialog
-cd examples/glfw_opengl3_fileopendialog
+cd CImGuiFileDialog
+cd examples/glfw_opengl3_filedialog
 make
 ```

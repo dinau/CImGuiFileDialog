@@ -9,7 +9,7 @@
 #include <GL/gl.h>
 
 //----------------------------
-// Include for FileOpenDialog
+// Include for FileDialog
 //----------------------------
 #include "ImGuiFileDialog.h"
 #include <stdlib.h>
@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
   clearColor.w = 1.00f;
 
   //------------------------------
-  // Create FileOpenDialog object
+  // Create FileDialog object
   //------------------------------
   ImGuiFileDialog *cfiledialog = IGFD_Create();
 
@@ -114,7 +114,7 @@ int main(int argc, char *argv[])
       static float f = 0.0f;
       static int counter = 0;
 
-      igBegin("FileOpenDialog example window at 2024/12", NULL, 0);
+      igBegin("FileDialog example window at 2024/12", NULL, 0);
       igText("ImGuiFileDialog: %s", IGFD_VERSION);
       igText("ImGui / CImGui: %s", igGetVersion());
 

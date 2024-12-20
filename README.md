@@ -23,11 +23,19 @@ https://github.com/aiekick/ImGuiFileDialog/blob/master/Documentation.md#simple-d
 
 ---
 
-[glfw_opengl3_base](examples/glfw_opengl3_base/main.c)
+##### [glfw_opengl3_base](examples/glfw_opengl3_base/main.c)
+
+--- 
+
+Very basic example
 
 ![alt](img/glfw_opengl3_base.png)
 
-[glfw_opengl3_color](examples/glfw_opengl3_color/main.c)
+##### [glfw_opengl3_color](examples/glfw_opengl3_color/main.c)
+
+---
+
+Added color and themes
 
 ![alt](img/glfw_opengl3_color.png)
 

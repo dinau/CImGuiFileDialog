@@ -2,7 +2,10 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [CImGuiFileDialog](#cimguifiledialog)
+  - [Document](#document)
   - [Screen shot](#screen-shot)
+    - [glfw_opengl3_base](#glfw_opengl3_base)
+    - [glfw_opengl3_color](#glfw_opengl3_color)
   - [Versions](#versions)
   - [Prerequisites](#prerequisites)
   - [Build and run](#build-and-run)
@@ -35,7 +38,7 @@ Very basic example
 
 ---
 
-Added color and themes
+Added color, theme, IconFont
 
 ![alt](img/glfw_opengl3_color.png)
 

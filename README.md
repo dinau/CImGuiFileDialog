@@ -9,45 +9,59 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## CImGuiFileDialog
+### CImGuiFileDialog
 
 ImGuiFileDialog example program with **C language**.
 
-### Screen shot
+#### Document 
 
 ---
 
-[glfw_opengl3_filedialog source](examples/glfw_opengl3_filedialog/main.c)
+https://github.com/aiekick/ImGuiFileDialog/blob/master/Documentation.md#simple-dialog-
 
-![alt](img/glfw_opengl3_filedialog.png)
+#### Screen shot
 
-### Versions
+---
+
+[glfw_opengl3_base](examples/glfw_opengl3_base/main.c)
+
+![alt](img/glfw_opengl3_base.png)
+
+[glfw_opengl3_color](examples/glfw_opengl3_color/main.c)
+
+![alt](img/glfw_opengl3_color.png)
+
+#### Versions
 
 ---
 
 - ImGuiFileDialog  v0.6.8-dev (2024/12/05)  
 git hash: c66089f509bbfbc0d8852d54106b1af88a104822
-- CImGui/ImGui 1.91.6 (2024/12)
+- CImGui / ImGui 1.91.6 (2024/12)
 
-### Prerequisites
+#### Prerequisites
 
 ---
-
-- Windows10 OS or later
+- OS
+   - Windows10 OS or later
+      - MSys/MinGW tools installed
+   - Linux Mint 22 (or Ubuntu / Debian families ?)
 - CMake installed 
 - GCC compiler installed
 - Make command installed
 
-### Build and run
+#### Build and run
 
 ---
 
 ```sh
-git clone --recurse-submodules https://github.com/dinau/CImGuiFileDialog
+git clone -b main --single-branch --depth 1 --recursive --shallow-submodules https://github.com/dinau/CImGuiFileDialog
 ```
+
+For example,
 
 ```sh
 cd CImGuiFileDialog
-cd examples/glfw_opengl3_filedialog
+cd examples/glfw_opengl3_base
 make
 ```

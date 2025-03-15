@@ -22,6 +22,7 @@ else()
 	set(TABLES_SOURCE "")
 endif()
 
+
 include_directories(../../libs/cimgui/imgui)
 add_definitions("-DIMGUI_USER_CONFIG=\"../../libs/cimgui/cimconfig.h\"")
 add_definitions("-DIMGUI_DISABLE_OBSOLETE_FUNCTIONS=1")
@@ -111,6 +112,11 @@ endif(WIN32)
 target_link_libraries(cimgui ${IMGUI_LIBRARIES} glfw)
 
 
+# For custom icon font
+include_directories(../..)
+target_compile_definitions(cimgui PUBLIC "-DCUSTOM_IMGUIFILEDIALOG_CONFIG=\"customIconFont.h\"")
+
+
 # using library
 include_directories(../../libs/cimgui/generator/output/)
 add_executable(${PROJECT_NAME} main.c
@@ -120,3 +126,5 @@ add_executable(${PROJECT_NAME} main.c
 )
 target_compile_definitions(${PROJECT_NAME} PUBLIC -DCIMGUI_USE_OPENGL3 -DCIMGUI_USE_GLFW)
 target_link_libraries(${PROJECT_NAME} cimgui)
+
+target_link_options(cimgui_glfw PRIVATE -mwindows)

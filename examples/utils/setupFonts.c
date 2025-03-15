@@ -10,13 +10,17 @@
 
 #define ImGui_GetIO igGetIO
 
-const char* IconFontPath = "../utils/fonticon/fa6/fa-solid-900.ttf";
+const char* IconFontPath1 =    "../utils/fonticon/fa6/fa-solid-900.ttf";
+const char* IconFontPath2 = "../../utils/fonticon/fa6/fa-solid-900.ttf";
+char const *iconFontPath;
+char const *fontPath;
 char sBufFontPath[2048];
 
 /*-----------------
  * getFontPath()
  *----------------*/
-const char* WinJpFontName   = "meiryo.ttc";
+const char* WinFontName1   = "meiryo.ttc";
+const char* WinFontName2   = "segoeui.ttf"; //,"Seoge UI",14.4) # English region standard font
 
 char* getWinFontPath(char* sBuf, int bufSize, const char* fontName) {
   char* sWinDir = getenv("windir");
@@ -28,7 +32,8 @@ char* getWinFontPath(char* sBuf, int bufSize, const char* fontName) {
  * getLinuxFontPath()
  *----------------*/
 // For Linux Mint 22 (Ubuntu/Debian family ok ?)
-char* LinuxJpFontName = "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc"; // ,"Noto Sans CJK",12.0) # Linux Mint
+const char* LinuxJpFontName1 = "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc"; // ,"Noto Sans CJK",12.0) # Linux Mint
+const char* LinuxJpFontName2 = "/usr/share/fonts/truetype/liberation/LiberationMono-Regular.ttf";  //"LiberationMono" Ubuntu english
 
 /*------------
  * point2px()
@@ -38,35 +43,64 @@ float point2px(float point) {
   return (point * 96) / 72;
 }
 
+void fontError(const char* fontPath){
+  printf("Error!: Not found font path: [%s] in %s\n", fontPath, __FILE__);
+}
+
 const ImWchar ranges_icon_fonts[]  = {(ImWchar)ICON_MIN_FA, (ImWchar)ICON_MAX_FA, (ImWchar)0};
 /*--------------
  * setupFonts()
  *-------------*/
 void setupFonts(void) {
   ImGuiIO* pio = ImGui_GetIO();
-  ImFontAtlas_AddFontDefault(pio->Fonts, NULL);
   ImFontConfig* config  = ImFontConfig_ImFontConfig();
-  config->MergeMode = true;
-  ImFontAtlas_AddFontFromFileTTF(pio->Fonts, IconFontPath, point2px(10), config , ranges_icon_fonts);
 
-  char* fontPath = getWinFontPath(sBufFontPath, sizeof(sBufFontPath), WinJpFontName);
-  if (existsFile(fontPath)) {
-    // ok
-  }else{
-    fontPath = LinuxJpFontName;
-    if (existsFile(LinuxJpFontName)) {
-      // ok
-    }else{
-      printf("Error!: Not found FontPath: [%s] in %s\n", fontPath, __FILE__);
-      return;
+  config->MergeMode = false;
+
+  iconFontPath = IconFontPath1;
+
+  // Setup Icon font
+  if(false == existsFile(iconFontPath)) {
+    fontError(iconFontPath);
+    iconFontPath = IconFontPath2;
+    if (false == existsFile(iconFontPath)) {
+      fontError(iconFontPath);
+      iconFontPath = NULL;
     }
   }
-  printf("Found JpFontPath: [%s]\n",fontPath);
+  if (NULL != iconFontPath){
+    printf("Found Icon font path: [%s] in %s\n", iconFontPath, __FILE__);
+    ImFontAtlas_AddFontFromFileTTF(pio->Fonts, iconFontPath, point2px(14), config , ranges_icon_fonts);
+  }
 
-  ImFont* font = ImFontAtlas_AddFontFromFileTTF(pio->Fonts, fontPath, point2px(14)
-                                , config
-                                , ImFontAtlas_GetGlyphRangesJapanese(pio->Fonts));
-  if (font == NULL) {
-    printf("Error!: AddFontFromFileTTF():  [%s] \n", fontPath);
+  // Setup (Base font + Icon font)
+  fontPath = getWinFontPath(sBufFontPath, sizeof(sBufFontPath), WinFontName1);
+  if (false == existsFile(fontPath)) {
+    fontError(fontPath);
+    fontPath = getWinFontPath(sBufFontPath, sizeof(sBufFontPath), WinFontName2);
+    if (false == existsFile(fontPath)) {
+      fontError(fontPath);
+      fontPath = LinuxJpFontName1;
+      if (false == existsFile(fontPath)) {
+        fontError(fontPath);
+        fontPath = LinuxJpFontName2;
+        if (false == existsFile(fontPath)) {
+          fontError(fontPath);
+          fontPath = NULL;
+        }
+      }
+    }
+  }
+  if (NULL != fontPath){
+    printf("Found font path: [%s]\n",fontPath);
+    config->MergeMode = true;
+    ImFont* font = ImFontAtlas_AddFontFromFileTTF(pio->Fonts, fontPath, point2px(16)
+                                  , config
+                                  , ImFontAtlas_GetGlyphRangesJapanese(pio->Fonts));
+    if (font == NULL) {
+      printf("Error!: AddFontFromFileTTF():  [%s] \n", fontPath);
+    }
+  }else{
+    ImFontAtlas_AddFontDefault(pio->Fonts, NULL);
   }
 }

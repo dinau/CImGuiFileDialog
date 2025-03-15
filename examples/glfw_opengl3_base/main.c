@@ -1,17 +1,21 @@
+#include <stdio.h>
+#include <string.h>
 #include "appImGui.h"
 
 // Include for FileDialog
 #include "ImGuiFileDialog.h"
 
-//---------
-//--- main
-//---------
-int main(int argc, char *argv[]) {
-  Window *window = createImGui(1024, 768);
+#define MAX_SIZE  2048
+char sFilePathName[MAX_SIZE];
+char sFileDirPath[MAX_SIZE];
+char sFilter[MAX_SIZE];
+char sDatas[MAX_SIZE];
 
+//-------------
+//--- gui_main
+//-------------
+void gui_main(Window *window) {
   bool showDemoWindow = false;
-
-  setupFonts();
 
   //------------------------------
   // Create FileDialog object
@@ -47,7 +51,9 @@ int main(int argc, char *argv[]) {
         //------------------------------
         struct IGFD_FileDialog_Config config = IGFD_FileDialog_Config_Get();
         config.path                          = ".";
-        config.flags                         = ImGuiFileDialogFlags_ConfirmOverwrite | ImGuiFileDialogFlags_Modal; // ImGuiFileDialogFlags
+        //config.flags                       =   ImGuiFileDialogFlags_ConfirmOverwrite
+        //                                     | ImGuiFileDialogFlags_Modal;
+        config.flags                         = ImGuiFileDialogFlags_Modal;     // ImGuiFileDialogFlags
         IGFD_OpenDialog(cfd,
                         "filedlg",                             // dialog key (make it possible to have different treatment reagrding the dialog key
                         "Open a File",                         // dialog title
@@ -75,6 +81,7 @@ int main(int argc, char *argv[]) {
           void *cdatas = IGFD_GetUserDatas(cfd);
           if (cdatas) {
             printf("GetUserDatas : %s\n", (const char *)cdatas);
+            memcpy(sDatas,        cdatas,       strlen(cdatas) + 1);
           }
           struct IGFD_Selection csel = IGFD_GetSelection(cfd, IGFD_ResultMode_KeepInputFile); // multi selection
           printf("Selection :\n");
@@ -83,16 +90,14 @@ int main(int argc, char *argv[]) {
           }
           // action
 
+          memcpy(sFilePathName, cfilePathName, strlen(cfilePathName) + 1);
+          memcpy(sFileDirPath,   cfilePath,     strlen(cfilePath) + 1);
+          memcpy(sFilter,       cfilter,       strlen(cfilter) + 1);
+
           // destroy
-          if (cfilePathName) {
-            free(cfilePathName);
-          }
-          if (cfilePath) {
-            free(cfilePath);
-          }
-          if (cfilter) {
-            free(cfilter);
-          }
+          if (cfilePathName) { free(cfilePathName); }
+          if (cfilePath)     { free(cfilePath); }
+          if (cfilter)       { free(cfilter); }
           IGFD_Selection_DestroyContent(&csel);
         }
         IGFD_CloseDialog(cfd);
@@ -100,6 +105,14 @@ int main(int argc, char *argv[]) {
       // End FileOpenDialog
 
       igText("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / igGetIO()->Framerate, igGetIO()->Framerate);
+
+      igNewLine();
+      igSeparator();
+      igText("Selected file = %s", sFilePathName);
+      igText("Dir           = %s", sFileDirPath);
+      igText("Filter        = %s", sFilter);
+      igText("Datas         = %s", sDatas);
+
       igEnd();
     }
 
@@ -107,7 +120,16 @@ int main(int argc, char *argv[]) {
   }
   // Destroy ImGuiFileDialog
   IGFD_Destroy(cfd);
-  //
+}
+
+//------
+// main
+//------
+int main(int argc, char *argv[]) {
+  Window *window = createImGui(1024, 768);
+  setupFonts(); // See ../utls/setupFonts.c
+
+  gui_main(window);
+
   destroyImGui(window);
-  return 0;
 }

@@ -1,47 +1,52 @@
+#include <stdio.h>
+#include <string.h>
 #include "appImGui.h"
 #include "themeGold.h"
 
 // Include for FileDialog
 #include "ImGuiFileDialog.h"
 
+#define MAX_SIZE  2048
+char sFilePathName[MAX_SIZE];
+char sFileDirPath[MAX_SIZE];
+char sFilter[MAX_SIZE];
+char sDatas[MAX_SIZE];
+
 //-----------------
 //--- setFileStyle
 //-----------------
 void setFileStyle(ImGuiFileDialog *cfd) {
-  ImVec4 clGreen  = {.y = 1, .w = 1};
-  ImVec4 clYellow = {.x = 1, .y = 1, .w = 1};
-  ImVec4 clOrange = {.x = 1, .y = 165 / 255.0, .w = 1};
-  ImVec4 clWhite2 = {.x = 0.98, .y = 0.98, .z = 1, .w = 1};
-  ImVec4 clWhite  = {.x = 1, .y = 0, .z = 1, .w = 1};
-  ImVec4 clCyan   = {.x = 0, .y = 1, .z = 1, .w = 1};
+  ImVec4 clGreen  = {.y = 1,                              .w = 1};
+  ImVec4 clYellow = {.x = 1,    .y = 1,                   .w = 1};
+  ImVec4 clOrange = {.x = 1,    .y = 165 / 255.0,         .w = 1};
+  ImVec4 clWhite2 = {.x = 0.98, .y = 0.98,        .z = 1, .w = 1};
+  ImVec4 clWhite  = {.x = 1,    .y = 0,           .z = 1, .w = 1};
+  ImVec4 clCyan   = {.x = 0,    .y = 1,           .z = 1, .w = 1};
+
   ImFont *pFont   = igGetDefaultFont();
-  IGFD_SetFileStyle(cfd, IGFD_FileStyleByExtention, "(.+[.].+)", clWhite2, ICON_FA_FILE, pFont);
-  IGFD_SetFileStyle(cfd, IGFD_FileStyleByExtention, ".exe", clCyan, ICON_FA_FILE, pFont);
-  IGFD_SetFileStyle(cfd, IGFD_FileStyleByExtention, ".c", clGreen, ICON_FA_FILE, pFont);
-  IGFD_SetFileStyle(cfd, IGFD_FileStyleByExtention, ".h", clYellow, ICON_FA_FILE, pFont);
-  IGFD_SetFileStyle(cfd, IGFD_FileStyleByExtention, ".txt", clWhite2, ICON_FA_FILE_LINES, pFont);
-  IGFD_SetFileStyle(cfd, IGFD_FileStyleByExtention, ".bat", clWhite2, ICON_FA_FILE, pFont);
-  IGFD_SetFileStyle(cfd, IGFD_FileStyleByExtention, ".ini", clWhite2, ICON_FA_FILE, pFont);
-  IGFD_SetFileStyle(cfd, IGFD_FileStyleByExtention, ".md", clWhite, ICON_FA_FILE, pFont);
-  IGFD_SetFileStyle(cfd, IGFD_FileStyleByTypeDir, NULL, clOrange, ICON_FA_FOLDER, pFont);
+
+  IGFD_SetFileStyle(cfd, IGFD_FileStyleByExtention, "(.+[.].+)", clWhite2, ICON_FA_FILE,       pFont);
+  IGFD_SetFileStyle(cfd, IGFD_FileStyleByExtention, ".exe",      clCyan,   ICON_FA_FILE,       pFont);
+  IGFD_SetFileStyle(cfd, IGFD_FileStyleByExtention, ".c",        clGreen,  ICON_FA_FILE,       pFont);
+  IGFD_SetFileStyle(cfd, IGFD_FileStyleByExtention, ".h",        clYellow, ICON_FA_FILE,       pFont);
+  IGFD_SetFileStyle(cfd, IGFD_FileStyleByExtention, ".txt",      clWhite2, ICON_FA_FILE_LINES, pFont);
+  IGFD_SetFileStyle(cfd, IGFD_FileStyleByExtention, ".bat",      clWhite2, ICON_FA_FILE,       pFont);
+  IGFD_SetFileStyle(cfd, IGFD_FileStyleByExtention, ".ini",      clWhite2, ICON_FA_FILE,       pFont);
+  IGFD_SetFileStyle(cfd, IGFD_FileStyleByExtention, ".md",       clWhite,  ICON_FA_FILE,       pFont);
+  IGFD_SetFileStyle(cfd, IGFD_FileStyleByTypeDir,   NULL,        clOrange, ICON_FA_FOLDER,     pFont);
 }
 
-//---------
-//--- main
-//---------
-int main(int argc, char *argv[]) {
-  Window *window = createImGui(1024, 768);
-
+//-------------
+//--- gui_main
+//-------------
+void gui_main(Window *window) {
   bool showDemoWindow = false;
-
-  setupFonts();
 
   //------------------------------
   // Create FileDialog object
   //------------------------------
   ImGuiFileDialog *cfd = IGFD_Create();
   setFileStyle(cfd);
-
 
   //-----------------
   // Theme selection
@@ -66,8 +71,8 @@ int main(int argc, char *argv[]) {
       igText("ImGuiFileDialog: %s", IGFD_VERSION);
       igText("ImGui / CImGui: %s", igGetVersion());
 
-      igCheckbox("Demo window", &showDemoWindow);
-      igColorEdit3("clear color", (float *)&window->clearColor, 0);
+      igCheckbox("ImGui Demo", &showDemoWindow);
+      igColorEdit3("Background color", (float *)&window->clearColor, 0);
 
       ImVec2 buttonSize = {.x = 100, .y = 50};
 
@@ -78,10 +83,10 @@ int main(int argc, char *argv[]) {
         //------------------------------
         struct IGFD_FileDialog_Config config = IGFD_FileDialog_Config_Get();
         config.path                          = ".";
-        config.flags                         = ImGuiFileDialogFlags_ConfirmOverwrite
-                                             | ImGuiFileDialogFlags_Modal
+        config.flags                         = ImGuiFileDialogFlags_Modal
                                              | ImGuiFileDialogFlags_ShowDevicesButton
                                              | ImGuiFileDialogFlags_CaseInsensitiveExtentionFiltering
+                                            // | ImGuiFileDialogFlags_ConfirmOverwrite
                                             ; // ImGuiFileDialogFlags
         IGFD_OpenDialog(cfd,
                         "filedlg",                             // dialog key (make it possible to have different treatment reagrding the dialog key
@@ -92,7 +97,7 @@ int main(int argc, char *argv[]) {
       }
 
       //------------------------------
-      // Start display FileDialog
+      // Start display FileOpenDialog
       //------------------------------
       ImGuiIO *ioptr = igGetIO();
       ImVec2 maxSize = {.x = ioptr->DisplaySize.x * 0.8f, .y = ioptr->DisplaySize.y * 0.8f};
@@ -110,6 +115,7 @@ int main(int argc, char *argv[]) {
           void *cdatas = IGFD_GetUserDatas(cfd);
           if (cdatas) {
             printf("GetUserDatas : %s\n", (const char *)cdatas);
+            memcpy(sDatas,        cdatas,       strlen(cdatas) + 1);
           }
           struct IGFD_Selection csel = IGFD_GetSelection(cfd, IGFD_ResultMode_KeepInputFile); // multi selection
           printf("Selection :\n");
@@ -118,16 +124,14 @@ int main(int argc, char *argv[]) {
           }
           // action
 
+          memcpy(sFilePathName, cfilePathName, strlen(cfilePathName) + 1);
+          memcpy(sFileDirPath,   cfilePath,     strlen(cfilePath) + 1);
+          memcpy(sFilter,       cfilter,       strlen(cfilter) + 1);
+
           // destroy
-          if (cfilePathName) {
-            free(cfilePathName);
-          }
-          if (cfilePath) {
-            free(cfilePath);
-          }
-          if (cfilter) {
-            free(cfilter);
-          }
+          if (cfilePathName) { free(cfilePathName); }
+          if (cfilePath)     { free(cfilePath); }
+          if (cfilter)       { free(cfilter); }
           IGFD_Selection_DestroyContent(&csel);
         }
         IGFD_CloseDialog(cfd);
@@ -136,14 +140,31 @@ int main(int argc, char *argv[]) {
       // End FileOpenDialog
 
       igText("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / igGetIO()->Framerate, igGetIO()->Framerate);
+
+      igNewLine();
+      igSeparator();
+      igText("Selected file = %s", sFilePathName);
+      igText("Dir           = %s", sFileDirPath);
+      igText("Filter        = %s", sFilter);
+      igText("Datas         = %s", sDatas);
+
       igEnd();
     }
 
     render(window);
   }
-  // destroy ImGuiFileDialog
+  // Destroy ImGuiFileDialog
   IGFD_Destroy(cfd);
-  //
+}
+
+//------
+// main
+//------
+int main(int argc, char *argv[]) {
+  Window *window = createImGui(1024, 768);
+  setupFonts(); // See ../utils/setupFonts.c
+
+  gui_main(window);
+
   destroyImGui(window);
-  return 0;
 }

@@ -1,5 +1,6 @@
 #include "appImGui.h"
 #include <stdlib.h>
+#include <stdbool.h>
 
 //------------------
 // --- setTheme
@@ -33,6 +34,8 @@ Window* createImGui(int32_t width, int32_t height){
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
+  glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // Hide window at startup.
+
   const char *glsl_version = "#version 330";
   // just an extra window hint for resize
   glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
@@ -60,6 +63,7 @@ Window* createImGui(int32_t width, int32_t height){
   ImGuiIO *ioptr = igGetIO();
   ioptr->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;   // Enable Keyboard Controls
   //ioptr->ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;  // Enable Gamepad Controls
+#undef IMGUI_HAS_DOCK
 #ifdef IMGUI_HAS_DOCK
   ioptr->ConfigFlags |= ImGuiConfigFlags_DockingEnable;       // Enable Docking
   ioptr->ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;     // Enable Multi-Viewport / Platform Windows
@@ -74,6 +78,7 @@ Window* createImGui(int32_t width, int32_t height){
   window->clearColor.y = 0.55f;
   window->clearColor.z = 0.60f;
   window->clearColor.w = 1.00f;
+  window->showDelayWindow = 1;
 
   return window;
 }
@@ -115,6 +120,9 @@ void render(Window* window){
     }
 #endif
     glfwSwapBuffers(window->handle);
+
+    if (window->showDelayWindow >= 0) window->showDelayWindow--;
+    if (window->showDelayWindow == 0)  glfwShowWindow(window->handle); // Avoid flickering screen at startup.
 }
 
 //-------------

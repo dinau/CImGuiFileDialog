@@ -7,16 +7,9 @@ endif
 
 BUILD_DIR = .build
 
-TARGET= $(BUILD_DIR)/cimgui_glfw
+TARGET= cimgui_glfw
 
-FEATURE_OPT += "-DCIMGUI_USE_GLFW \
-							 -DCIMGUI_USE_OPENGL3 \
-							 "
-
-CMAKE_C_OPT   += -DCMAKE_C_FLAGS_RELEASE=$(FEATURE_OPT)
-CMAKE_CPP_OPT += -DCMAKE_CPP_FLAGS_RELEASE=$(FEATURE_OPT)
-
-CMAKE_CMD = cmake -B $(BUILD_DIR) $(BUILD_TOOL) -DSTATIC_BUILD=true -DCMAKE_BUILD_TYPE=Release $(CMAKE_C_OPT) $(CMAKE_CPP_OPT)
+CMAKE_CMD = cmake -B $(BUILD_DIR) $(BUILD_TOOL) -DSTATIC_BUILD=true
 
 ifeq ($(wildcard $(BUILD_DIR)/),)
 	EXEC_CMD = $(CMAKE_CMD); $(MAKE) -C $(BUILD_DIR)
@@ -24,18 +17,24 @@ else
 	EXEC_CMD = $(MAKE) -C $(BUILD_DIR)
 endif
 
-all:
-	$(EXEC_CMD)
-	@-strip $(TARGET)$(EXE)
-	./$(TARGET)$(EXE)
+all: build run
 
-.PHONY: clean run fmt
+build:
+	$(EXEC_CMD)
+	@-strip $(BUILD_DIR)/$(TARGET)$(EXE)
+
+.PHONY: clean run fmt build cleanall
 
 clean:
+	$(MAKE) -C $(BUILD_DIR) clean
+
+cleanall:
 	rm -fr $(BUILD_DIR)
 
-run: all
-	./$(TARGET)$(EXE)
+run:
+	@-cp ./imgui.ini $(BUILD_DIR)/
+	(cd $(BUILD_DIR);  ./$(TARGET)$(EXE))
+	@-cp -f $(BUILD_DIR)/imgui.ini .
 
 fmt:
 	@clang-format --style=file:"../.clang-format" main.c > temp.c

@@ -21,6 +21,7 @@
 typedef struct stWindow {
   GLFWwindow* handle;
   ImVec4 clearColor;
+  int showDelayWindow;
 } Window;
 
 Window* createImGui(int32_t width, int32_t height);

@@ -1,3 +1,0 @@
-[submodule "libs/ImGuiFileDialog"]
-	path = libs/ImGuiFileDialog
-	url = https://github.com/dinau/ImGuiFileDialog

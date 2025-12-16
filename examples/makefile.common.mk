@@ -11,16 +11,18 @@ TARGET= cimgui_glfw
 
 CMAKE_CMD = cmake -B $(BUILD_DIR) $(BUILD_TOOL) -DSTATIC_BUILD=true
 
-ifeq ($(wildcard $(BUILD_DIR)/),)
+
+ifeq ($(wildcard $(BUILD_DIR)/*),)
 	EXEC_CMD = $(CMAKE_CMD); $(MAKE) -C $(BUILD_DIR)
 else
 	EXEC_CMD = $(MAKE) -C $(BUILD_DIR)
 endif
 
-all: build run
+all: build
 
-build:
+build: Makefile
 	$(EXEC_CMD)
+	@-mkdir $(BUILD_DIR)
 	@-strip $(BUILD_DIR)/$(TARGET)$(EXE)
 
 .PHONY: clean run fmt build cleanall

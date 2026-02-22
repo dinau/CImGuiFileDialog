@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+#define igGetIO igGetIO_Nil
+
 //------------------
 // --- setTheme
 //------------------

@@ -43,7 +43,6 @@ include_directories(../utils/)
 include_directories(../utils/fonticon)
 list(APPEND IMGUI_SOURCES
 ../../libs/ImGuiFileDialog/ImGuiFileDialog.cpp
-../utils/themeGold.cpp
 )
 
 add_compile_definitions("IMGUI_IMPL_OPENGL_LOADER_GL3W")

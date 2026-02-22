@@ -2,6 +2,8 @@
 #include <string.h>
 #include "appImGui.h"
 
+#define igGetIO igGetIO_Nil
+
 // Include for FileDialog
 #include "ImGuiFileDialog.h"
 
@@ -15,6 +17,7 @@ char sDatas[MAX_SIZE];
 //--- gui_main
 //-------------
 void gui_main(Window *window) {
+  setupFonts(); // See ../utils/setupFonts.c
   bool showDemoWindow = false;
 
   //------------------------------
@@ -36,9 +39,9 @@ void gui_main(Window *window) {
 
     // show a simple window that we created ourselves.
     {
-      igBegin("FileDialog example window at 2024/12", NULL, 0);
+      igBegin("FileDialog example window", NULL, 0);
       igText("ImGuiFileDialog: %s", IGFD_VERSION);
-      igText("ImGui / CImGui: %s", igGetVersion());
+      igText("ImGui / CImGui: %s at 2026/02", igGetVersion());
 
       igCheckbox("ImGui Demo", &showDemoWindow);
       igColorEdit3("Background color", (float *)&window->clearColor, 0);
@@ -127,7 +130,6 @@ void gui_main(Window *window) {
 //------
 int main(int argc, char *argv[]) {
   Window *window = createImGui(1024, 768);
-  setupFonts(); // See ../utils/setupFonts.c
 
   gui_main(window);
 

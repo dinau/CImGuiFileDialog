@@ -8,7 +8,7 @@
 #include "utils.h"
 #include "setupFonts.h"
 
-#define ImGui_GetIO igGetIO
+#define ImGui_GetIO igGetIO_Nil
 
 const char* IconFontPath1 =    "../utils/fonticon/fa6/fa-solid-900.ttf";
 const char* IconFontPath2 = "../../utils/fonticon/fa6/fa-solid-900.ttf";
@@ -47,7 +47,6 @@ void fontError(const char* fontPath){
   printf("Error!: Not found font path: [%s] in %s\n", fontPath, __FILE__);
 }
 
-const ImWchar ranges_icon_fonts[]  = {(ImWchar)ICON_MIN_FA, (ImWchar)ICON_MAX_FA, (ImWchar)0};
 /*--------------
  * setupFonts()
  *-------------*/
@@ -80,7 +79,7 @@ void setupFonts(void) {
     printf("Found font path: [%s]\n",fontPath);
     ImFont* font = ImFontAtlas_AddFontFromFileTTF(pio->Fonts, fontPath, point2px(16)
                                   , config
-                                  , ImFontAtlas_GetGlyphRangesJapanese(pio->Fonts));
+                                  , NULL);
     if (font == NULL) {
       printf("Error!: AddFontFromFileTTF():  [%s] \n", fontPath);
     }
@@ -105,6 +104,6 @@ void setupFonts(void) {
   if (NULL != iconFontPath){
     printf("Found Icon font path: [%s] in %s\n", iconFontPath, __FILE__);
     float point = (NULL == fontPath) ?  9 : 13;
-    ImFontAtlas_AddFontFromFileTTF(pio->Fonts, iconFontPath, point2px(point), config , ranges_icon_fonts);
+    ImFontAtlas_AddFontFromFileTTF(pio->Fonts, iconFontPath, point2px(point), config , NULL);
   }
 }

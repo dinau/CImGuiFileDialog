@@ -22,18 +22,18 @@ all: build
 
 build: Makefile
 	$(EXEC_CMD)
-	@-mkdir $(BUILD_DIR)
 	@-strip $(BUILD_DIR)/$(TARGET)$(EXE)
+	@-cp ./imgui.ini $(BUILD_DIR)/
 
 .PHONY: clean run fmt build cleanall
 
 clean:
-	$(MAKE) -C $(BUILD_DIR) clean
+	rm -fr $(BUILD_DIR)
 
 cleanall:
 	rm -fr $(BUILD_DIR)
 
-run:
+run: all
 	@-cp ./imgui.ini $(BUILD_DIR)/
 	(cd $(BUILD_DIR);  ./$(TARGET)$(EXE))
 	@-cp -f $(BUILD_DIR)/imgui.ini .
